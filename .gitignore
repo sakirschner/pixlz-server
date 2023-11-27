@@ -1,0 +1,13 @@
+# gitignore rules
+
+.env
+node_modules
+build
+releases
+
+# vscode
+/.vscode
+*.code-workspace
+
+# fMac
+.DS_Store
