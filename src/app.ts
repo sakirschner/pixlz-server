@@ -2,11 +2,12 @@ import Fastify from 'fastify';
 import cookie from '@fastify/cookie';
 import { appSchemas } from './schemas';
 import cors from '@fastify/cors';
-import db from './db';
 import fjwt, { FastifyJWT } from '@fastify/jwt';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { router } from './routers';
 import * as config from './configs/app.config';
+import dbConnection from './db';
+import runServer from './server';
 
 // Instantiate Fastify
 const app = Fastify({ logger: config.LOGGING });
@@ -64,17 +65,8 @@ listeners.forEach((signal) => {
 // ====== Run App ====== //
 
 async function main() {
-  try {
-    await app.listen({
-      port: config.SERVER_PORT,
-      host: config.SERVER_HOSTNAME,
-    });
-    console.info(`Server listening at ${config.SERVER_HOSTNAME}:${config.SERVER_PORT}`);
-  } catch (error) {
-    app.log.error(error);
-    process.exit(1);
-  }
+  await runServer(app);
+  await dbConnection();
 }
 
-db();
 main();
